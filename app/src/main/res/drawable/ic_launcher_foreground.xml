@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A soft halo: ring, inner orb and a small orbiting light. Kept inside the 66dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M33,54a21,21 0,1 0,42 0a21,21 0,1 0,-42 0"
+        android:strokeWidth="5.5"
+        android:strokeColor="#F2FFFFFF"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M45,54a9,9 0,1 0,18 0a9,9 0,1 0,-18 0"
+        android:fillColor="#FFFFFFFF" />
+    <path
+        android:pathData="M65,38.5a4.5,4.5 0,1 0,9 0a4.5,4.5 0,1 0,-9 0"
+        android:fillColor="#FFFFFFFF" />
+</vector>

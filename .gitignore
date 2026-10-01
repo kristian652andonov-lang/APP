@@ -1,0 +1,23 @@
+# Gradle / build
+.gradle/
+build/
+/captures
+.externalNativeBuild/
+.cxx/
+.kotlin/
+
+# Local configuration (SDK path, secrets)
+local.properties
+*.keystore
+*.jks
+keystore.properties
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Cloudflare worker local state
+server/news-proxy/.wrangler/
+server/news-proxy/node_modules/
+server/news-proxy/.dev.vars

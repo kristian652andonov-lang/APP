@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- App identity: change this single value to rename the app. -->
+    <string name="app_name">Aura</string>
+
+    <!-- Common actions -->
+    <string name="action_add">Add</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_back">Back</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_close">Close</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_done">Done</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_more">More options</string>
+    <string name="action_retry">Try again</string>
+    <string name="action_save">Save</string>
+    <string name="action_see_all">See all</string>
+    <string name="action_undo">Undo</string>
+    <string name="state_selected">Selected</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_no_browser">No browser is available to open this article.</string>
+    <string name="offline_indicator">Offline</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_tasks">Tasks</string>
+    <string name="nav_news">News</string>
+    <string name="nav_apps">Apps</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Dates -->
+    <string name="date_today">Today</string>
+    <string name="date_tomorrow">Tomorrow</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="picker_select_time">Select time</string>
+    <plurals name="in_minutes">
+        <item quantity="one">in %d min</item>
+        <item quantity="other">in %d min</item>
+    </plurals>
+    <plurals name="in_hours">
+        <item quantity="one">in %d hour</item>
+        <item quantity="other">in %d hours</item>
+    </plurals>
+
+    <!-- Home -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="home_open_settings">Open profile and settings</string>
+    <string name="home_open_tasks">Open tasks</string>
+    <string name="home_open_reminders">Open reminders</string>
+    <string name="home_todays_progress">Today\'s progress</string>
+    <string name="home_completed_of" tools:ignore="PluralsCandidate">%1$d of %2$d completed</string>
+    <string name="home_no_tasks_short">No tasks yet</string>
+    <string name="home_motivation_empty">Plan something small for today.</string>
+    <string name="home_motivation_start">One step at a time — you\'ve got this.</string>
+    <string name="home_motivation_half">More than halfway there. Keep going!</string>
+    <string name="home_motivation_done">All done for today. Enjoy your time ✨</string>
+    <string name="home_next_reminder">Next reminder</string>
+    <string name="home_no_reminders">No upcoming reminders</string>
+    <string name="home_quick_apps">Quick Apps</string>
+    <string name="home_quick_apps_empty">Pin the apps you use most for one-tap access.</string>
+    <string name="home_latest_news">Latest news</string>
+    <string name="home_todays_tasks">Today\'s tasks</string>
+    <string name="home_no_tasks">Nothing planned for today. Add a task to get started.</string>
+    <plurals name="home_more_tasks">
+        <item quantity="one">View %1$d more task</item>
+        <item quantity="other">View %1$d more tasks</item>
+    </plurals>
+
+    <!-- Tasks -->
+    <string name="tasks_title">Tasks</string>
+    <string name="tasks_subtitle" tools:ignore="PluralsCandidate">%1$d open · %2$d done today</string>
+    <string name="tasks_filter_all">All</string>
+    <string name="tasks_filter_today">Today</string>
+    <string name="tasks_filter_upcoming">Upcoming</string>
+    <string name="tasks_filter_completed">Completed</string>
+    <string name="tasks_sort">Sort tasks</string>
+    <string name="tasks_sort_time">By time</string>
+    <string name="tasks_sort_priority">By priority</string>
+    <string name="tasks_sort_created">By creation date</string>
+    <string name="tasks_hide_completed">Hide completed</string>
+    <string name="tasks_show_completed">Show completed</string>
+    <string name="tasks_clear_completed">Clear completed</string>
+    <string name="tasks_clear_completed_title">Clear completed tasks?</string>
+    <string name="tasks_clear_completed_message">All completed tasks will be permanently deleted.</string>
+    <string name="tasks_section_overdue">Overdue</string>
+    <string name="tasks_section_no_date">No date</string>
+    <string name="tasks_empty_all_title">A clean slate</string>
+    <string name="tasks_empty_all_message">Add your first task and it will show up here.</string>
+    <string name="tasks_empty_today_title">Nothing due today</string>
+    <string name="tasks_empty_today_message">Enjoy the calm, or plan something new.</string>
+    <string name="tasks_empty_upcoming_title">No upcoming tasks</string>
+    <string name="tasks_empty_upcoming_message">Tasks with a future due date will appear here.</string>
+    <string name="tasks_empty_completed_title">No completed tasks yet</string>
+    <string name="tasks_empty_completed_message">Tasks you check off will be collected here.</string>
+    <string name="task_add">Add task</string>
+    <string name="task_add_short">Add</string>
+    <string name="task_added">Task added</string>
+    <string name="task_updated">Task updated</string>
+    <string name="task_deleted">Task deleted</string>
+    <string name="task_action_edit">Edit task</string>
+    <string name="task_state_completed">Completed</string>
+    <string name="task_state_open">Not completed</string>
+    <string name="task_overdue_format">Overdue · %1$s</string>
+    <string name="task_has_notes">Notes</string>
+    <string name="task_editor_new">New task</string>
+    <string name="task_editor_edit">Edit task</string>
+    <string name="task_editor_title_hint">What needs to be done?</string>
+    <string name="task_editor_notes_hint">Add notes (optional)</string>
+    <string name="task_editor_when">When</string>
+    <string name="task_editor_no_date">No date</string>
+    <string name="task_editor_add_time">Add time</string>
+    <string name="task_editor_clear_date">Remove date</string>
+    <string name="task_editor_clear_time">Remove time</string>
+    <string name="task_editor_priority">Priority</string>
+    <string name="task_editor_repeat">Repeat</string>
+    <string name="task_editor_notify">Notify me at the due time</string>
+    <string name="task_editor_add">Add task</string>
+
+    <!-- Priorities and repeat rules -->
+    <string name="priority_low">Low</string>
+    <string name="priority_normal">Normal</string>
+    <string name="priority_high">High</string>
+    <string name="repeat_never">Never</string>
+    <string name="repeat_daily">Every day</string>
+    <string name="repeat_weekdays">Weekdays</string>
+    <string name="repeat_weekends">Weekends</string>
+    <string name="repeat_weekly">Weekly</string>
+    <string name="repeat_monthly">Monthly</string>
+
+    <!-- Reminders -->
+    <string name="reminders_title">Reminders</string>
+    <plurals name="reminders_subtitle">
+        <item quantity="one">%1$d upcoming</item>
+        <item quantity="other">%1$d upcoming</item>
+    </plurals>
+    <string name="reminders_section_upcoming">Upcoming</string>
+    <string name="reminders_section_paused">Paused</string>
+    <string name="reminders_section_past">Past</string>
+    <string name="reminders_empty_title">No reminders yet</string>
+    <string name="reminders_empty_message">Create a reminder and we\'ll nudge you at the right moment.</string>
+    <string name="reminders_globally_disabled">Reminders are turned off in Settings, so no notifications will be sent.</string>
+    <string name="reminder_add">Add reminder</string>
+    <string name="reminder_action_edit">Edit reminder</string>
+    <string name="reminder_toggle_label">Reminder %1$s enabled</string>
+    <string name="reminder_paused">Paused</string>
+    <string name="reminder_done_on">Done · %1$s</string>
+    <string name="reminder_set_for">Reminder set for %1$s</string>
+    <string name="reminder_saved">Reminder saved</string>
+    <string name="reminder_deleted">Reminder deleted</string>
+    <string name="reminder_scheduling_failed">The reminder was saved, but Android didn\'t allow it to be scheduled. Please try again.</string>
+    <string name="reminder_editor_new">New reminder</string>
+    <string name="reminder_editor_edit">Edit reminder</string>
+    <string name="reminder_editor_title_hint">Remind me to…</string>
+    <string name="reminder_editor_description_hint">Description (optional)</string>
+    <string name="reminder_editor_when">When</string>
+    <string name="reminder_editor_repeat">Repeat</string>
+    <string name="reminder_editor_set">Set reminder</string>
+    <string name="reminder_editor_time_in_past">That time has already passed. Pick a time in the future.</string>
+
+    <!-- Permissions -->
+    <string name="permission_notifications_hint">Notifications are off, so you won\'t be alerted.</string>
+    <string name="permission_notifications_banner">Allow notifications so your reminders can reach you.</string>
+    <string name="permission_exact_alarm_banner">Allow \"Alarms &amp; reminders\" so reminders arrive at the exact minute instead of a few minutes late.</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_reminders">Reminders</string>
+    <string name="notification_channel_reminders_description">Alerts for the reminders and task due times you create.</string>
+    <string name="notification_reminder_fallback_text">Tap to open your reminders</string>
+    <string name="notification_task_due">Task is due</string>
+    <string name="notification_task_due_at">Due at %1$s</string>
+    <string name="notification_action_snooze">Snooze 10 min</string>
+    <string name="notification_action_complete">Mark as done</string>
+
+    <!-- News -->
+    <string name="news_title">Latest News</string>
+    <string name="news_updated">updated %1$s</string>
+    <string name="news_refresh">Refresh news</string>
+    <string name="news_refresh_failed">Couldn\'t refresh the news. Showing saved stories.</string>
+    <string name="news_showing_saved">Showing saved news</string>
+    <string name="news_open_article_label">Read on %1$s</string>
+    <string name="news_attribution_publishers">Headlines from %1$s. Articles open on the publisher\'s website.</string>
+    <string name="news_attribution_provider">Headlines via %1$s. Articles open on the publisher\'s website.</string>
+    <string name="news_empty_title">No stories right now</string>
+    <string name="news_empty_message">Check back a little later or pick another category.</string>
+    <string name="news_error_offline_title">You\'re offline</string>
+    <string name="news_error_offline_message">Connect to the internet to load the latest news. Saved stories appear here automatically.</string>
+    <string name="news_error_unsupported_title">News isn\'t available here yet</string>
+    <string name="news_error_unsupported_message">Built-in news feeds cover Bulgaria, the United Kingdom and Germany. Other countries need a news API to be configured for this app.</string>
+    <string name="news_error_unauthorized_title">News service unavailable</string>
+    <string name="news_error_unauthorized_message">The news service rejected the request. The app\'s news configuration needs to be updated.</string>
+    <string name="news_error_rate_limited_title">Taking a short break</string>
+    <string name="news_error_rate_limited_message">The news service limit was reached. Please try again later.</string>
+    <string name="news_error_generic_title">Couldn\'t load news</string>
+    <string name="news_error_generic_message">The news source didn\'t respond as expected. Please try again in a moment.</string>
+    <string name="news_category_top">Top</string>
+    <string name="news_category_local">Local</string>
+    <string name="news_category_world">World</string>
+    <string name="news_category_business">Business</string>
+    <string name="news_category_technology">Technology</string>
+    <string name="news_category_science">Science</string>
+    <string name="news_category_sports">Sports</string>
+    <string name="news_category_entertainment">Entertainment</string>
+    <string name="news_category_health">Health</string>
+
+    <!-- Apps -->
+    <string name="apps_title">Apps</string>
+    <string name="apps_subtitle">Your favorite apps, one tap away</string>
+    <string name="apps_search_hint">Search apps…</string>
+    <string name="apps_quick_apps_section">Quick Apps</string>
+    <string name="apps_all_section">Installed apps</string>
+    <string name="apps_reorder_hint">Drag to reorder</string>
+    <string name="apps_empty_title">No Quick Apps yet</string>
+    <string name="apps_empty_message">Tap + next to any installed app below to pin it here and on your Home screen.</string>
+    <string name="apps_no_match_title">No matching apps</string>
+    <string name="apps_no_match_message">Try a different name.</string>
+    <string name="apps_all_pinned">Every installed app is already in Quick Apps.</string>
+    <string name="apps_open_label">Open %1$s</string>
+    <string name="apps_add_label">Add %1$s to Quick Apps</string>
+    <string name="apps_added">%1$s added to Quick Apps</string>
+    <string name="apps_removed">%1$s removed</string>
+    <string name="apps_rename">Rename</string>
+    <string name="apps_rename_title">Rename app</string>
+    <string name="apps_rename_label">Display name</string>
+    <string name="apps_rename_reset">Use original name</string>
+    <string name="apps_remove">Remove</string>
+    <string name="apps_move_up">Move up</string>
+    <string name="apps_move_down">Move down</string>
+    <string name="apps_drag_handle">Drag to reorder</string>
+    <string name="apps_on_home">Shown on Home</string>
+    <string name="apps_hidden_from_home">Hidden from Home</string>
+    <string name="apps_show_on_home">Show on Home</string>
+    <string name="apps_hide_from_home">Hide from Home</string>
+    <string name="apps_not_installed_short">Not installed</string>
+    <string name="apps_not_installed_title">%1$s isn\'t installed</string>
+    <string name="apps_not_installed_message">%1$s isn\'t on this device anymore. You can get it from Google Play.</string>
+    <string name="apps_not_installed_message_web">%1$s isn\'t on this device. You can get it from Google Play or open the website instead.</string>
+    <string name="apps_get_app">Get the app</string>
+    <string name="apps_open_website">Open website</string>
+    <string name="apps_launch_failed">This app couldn\'t be opened.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_profile_hint">Tap to edit your name · tap the photo to change it</string>
+    <string name="settings_change_photo">Change profile picture</string>
+    <string name="settings_choose_photo">Choose a photo</string>
+    <string name="settings_remove_photo">Remove photo</string>
+    <string name="settings_section_profile">Profile</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_section_notifications">Notifications</string>
+    <string name="settings_section_news">News</string>
+    <string name="settings_section_apps">Apps</string>
+    <string name="settings_section_tasks">Tasks</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_name">Name</string>
+    <string name="settings_name_not_set">Add your name</string>
+    <string name="settings_country">Country</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_accent">Accent color</string>
+    <string name="accent_lavender">Lavender</string>
+    <string name="accent_ocean">Ocean</string>
+    <string name="accent_rose">Rose</string>
+    <string name="accent_mint">Mint</string>
+    <string name="accent_peach">Peach</string>
+    <string name="settings_reminders_enabled">Reminders</string>
+    <string name="settings_reminders_enabled_subtitle">Notify me about reminders and due tasks</string>
+    <string name="settings_sound">Notification sound</string>
+    <string name="settings_vibration">Notification vibration</string>
+    <string name="settings_permission">Notification permission</string>
+    <string name="settings_permission_granted">Allowed</string>
+    <string name="settings_permission_denied">Not allowed — reminders can\'t alert you</string>
+    <string name="settings_exact_alarms">Precise timing</string>
+    <string name="settings_exact_alarms_granted">Reminders fire at the exact minute</string>
+    <string name="settings_exact_alarms_denied">Reminders may arrive a few minutes late</string>
+    <string name="settings_battery">Battery optimization</string>
+    <string name="settings_battery_subtitle">If reminders are delayed, exclude Aura from battery optimization</string>
+    <string name="settings_news_country">News country</string>
+    <string name="settings_news_categories">Categories</string>
+    <string name="settings_news_count">Number of articles</string>
+    <string name="settings_news_refresh">Background refresh</string>
+    <string name="settings_news_source">Source</string>
+    <string name="settings_news_source_unavailable">No news source is configured for this country</string>
+    <string name="refresh_manual">Only when I open the app</string>
+    <string name="refresh_hourly">Every hour</string>
+    <string name="refresh_3h">Every 3 hours</string>
+    <string name="refresh_6h">Every 6 hours</string>
+    <string name="refresh_12h">Every 12 hours</string>
+    <string name="refresh_daily">Once a day</string>
+    <string name="settings_manage_apps">Manage Quick Apps</string>
+    <string name="settings_manage_apps_subtitle">Add, remove, rename and reorder</string>
+    <string name="settings_show_completed">Show completed tasks</string>
+    <string name="settings_default_priority">Default task priority</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_privacy">Privacy policy</string>
+    <string name="settings_terms">Terms of use</string>
+    <string name="settings_licenses">Open-source licenses</string>
+    <string name="country_search_hint">Search countries…</string>
+    <string name="country_feeds_builtin">Built-in news feeds</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_title_1">Your day, organized.</string>
+    <string name="onboarding_body_1">A calm overview of everything that matters today, in one place.</string>
+    <string name="onboarding_title_2">Stay on top of your tasks and reminders.</string>
+    <string name="onboarding_body_2">Plan tasks, set gentle reminders and watch your progress grow.</string>
+    <string name="onboarding_title_3">Keep your favorite apps and latest news one tap away.</string>
+    <string name="onboarding_body_3">Open the apps you love instantly and catch up on headlines from trusted sources.</string>
+    <string name="onboarding_name_title">What should we call you?</string>
+    <string name="onboarding_name_body">We\'ll use it to greet you. It stays on your device.</string>
+    <string name="onboarding_name_hint">Your name</string>
+    <string name="onboarding_country_title">Which country are you in?</string>
+    <string name="onboarding_country_body">We\'ll show news from your country. You can change this anytime in Settings.</string>
+    <string name="onboarding_notifications_title">Never miss a reminder</string>
+    <string name="onboarding_notifications_body">Aura only sends notifications for the reminders and task due times you create — no promotions, ever. You can turn them off at any time.</string>
+    <string name="onboarding_allow_notifications">Allow notifications</string>
+    <string name="onboarding_not_now">Not now</string>
+
+    <!-- Legal -->
+    <string name="legal_licenses_intro">Aura is built with these open-source components. Tap one to read its license.</string>
+    <string name="legal_privacy_body">## Overview\n\nAura is designed to keep your information on your device. There are no accounts, no advertising and no analytics or tracking SDKs.\n\n## Data stored on your device\n\nYour name, profile picture, country, tasks, reminders, Quick Apps and preferences are stored only in Aura\'s private storage on your phone. The most recent news headlines are cached so they are available offline.\n\n## Network requests\n\nTo show news, Aura downloads headlines directly from the news publishers\' public RSS feeds or, if configured by the app\'s distributor, from the NewsData.io news service. Article images are loaded from the publishers\' servers. These requests include standard technical information such as your IP address and the app name, as with any web request. Your tasks, reminders, name and other personal data are never sent.\n\n## Installed apps\n\nTo let you pin and open apps, Aura reads the list of launchable apps installed on your device. This list is used only on your device and is never uploaded.\n\n## Permissions\n\nNotifications are used only to deliver the reminders and task alerts you create. \"Alarms &amp; reminders\" lets reminders fire at the exact minute. Internet and network-state access are used to load news and to show when you are offline. Starting at boot lets Aura restore your reminders after the phone restarts.\n\n## Backups\n\nIf Android device backup is enabled, Android may include Aura\'s data in your encrypted Google backup so it can be restored on a new phone. Temporary caches, such as article images, are excluded.\n\n## Deleting your data\n\nDelete individual items in the app, or remove everything by clearing Aura\'s storage in Android Settings or uninstalling the app.\n\n## Changes\n\nIf this policy changes, the updated version will be included with the app update.</string>
+    <string name="legal_terms_body">## Using Aura\n\nAura is a personal productivity dashboard provided free of charge and \"as is\", without warranties of any kind.\n\n## Reminders\n\nAura schedules reminders using Android\'s alarm system. Battery-saving features, manufacturer restrictions or disabled notifications can delay or prevent alerts. Don\'t rely on Aura for critical or safety-related alerts.\n\n## News content\n\nHeadlines, summaries and images belong to their respective publishers and are shown with attribution to the original source. Tapping an article opens it on the publisher\'s own website, where the publisher\'s terms apply. Aura does not create, edit or verify news content.\n\n## Third-party apps\n\nQuick Apps opens apps installed on your device. Those apps are provided by their developers and are governed by their own terms.\n\n## Liability\n\nTo the extent permitted by law, the developers of Aura are not liable for any loss resulting from the use of the app, including missed reminders or lost data.</string>
+</resources>
