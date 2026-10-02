@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.aura.dashboard.domain.model.AppStyle
 import com.aura.dashboard.ui.components.glassBorderBrush
 import com.aura.dashboard.ui.theme.AuraTheme
 import dev.chrisbanes.haze.HazeInput
@@ -59,7 +60,14 @@ fun AuraBottomBar(
     val colors = AuraTheme.colors
     val haptics = LocalHapticFeedback.current
     val shape = RoundedCornerShape(34.dp)
-    val tint = if (colors.isDark) Color(0xFF1E1B29).copy(alpha = 0.72f) else Color.White.copy(alpha = 0.72f)
+    val surface = if (colors.isDark) Color(0xFF1E1B29) else Color.White
+    val tint = when (colors.style) {
+        AppStyle.GLASS -> surface.copy(alpha = 0.72f)
+        AppStyle.TRANSPARENT -> surface.copy(alpha = if (colors.isDark) 0.35f else 0.45f)
+        AppStyle.SOLID -> surface
+        AppStyle.PASTEL -> colors.glassStrong
+        AppStyle.MINIMAL -> colors.background.copy(alpha = 0.92f)
+    }
     Row(
         modifier = modifier
             .navigationBarsPadding()
@@ -68,7 +76,7 @@ fun AuraBottomBar(
             .fillMaxWidth()
             .height(BottomBarHeight)
             .shadow(
-                elevation = 24.dp,
+                elevation = 24.dp * colors.elevationScale.coerceAtLeast(0.25f),
                 shape = shape,
                 ambientColor = colors.shadow.copy(alpha = if (colors.isDark) 0.6f else 0.25f),
                 spotColor = colors.shadow.copy(alpha = if (colors.isDark) 0.6f else 0.25f),
@@ -83,7 +91,7 @@ fun AuraBottomBar(
                     fallbackColorEffect(HazeColorEffect.tint(if (colors.isDark) Color(0xF21E1B29) else Color(0xF2FFFFFF)))
                 },
             )
-            .border(1.dp, glassBorderBrush(), shape)
+            .then(if (colors.borderWidth > 0f) Modifier.border(colors.borderWidth.dp, glassBorderBrush(), shape) else Modifier)
             .padding(horizontal = 6.dp)
             .selectableGroup(),
         horizontalArrangement = Arrangement.SpaceEvenly,

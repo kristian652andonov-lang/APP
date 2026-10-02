@@ -96,6 +96,7 @@ fun HomeScreen(
     onOpenNews: () -> Unit,
     onOpenApps: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenWeather: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
     editor: TaskEditorViewModel = hiltViewModel(key = "taskEditor"),
 ) {
@@ -125,6 +126,14 @@ fun HomeScreen(
     ) {
         item(key = "greeting") {
             Greeting(state = state, onOpenSettings = onOpenSettings, modifier = Modifier.padding(horizontal = 20.dp))
+        }
+        item(key = "clock") {
+            ClockWeatherCard(
+                weather = state.weather,
+                clockStyle = state.clockStyle,
+                onClick = onOpenWeather,
+                modifier = Modifier.padding(horizontal = 20.dp),
+            )
         }
         item(key = "progress") {
             ProgressCard(state = state, onClick = onOpenTasks, modifier = Modifier.padding(horizontal = 20.dp))

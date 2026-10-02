@@ -31,6 +31,9 @@ interface QuickAppRepository {
 
     /** First run: pins popular apps that are actually installed. */
     suspend fun seedDefaultsIfNeeded()
+
+    /** One-time additions for existing users (e.g. pinning Claude in version 2). */
+    suspend fun applyDefaultUpdates()
 }
 
 @Singleton
@@ -99,9 +102,25 @@ class DeviceQuickAppRepository @Inject constructor(
                 .forEach { add(it) }
         }
         preferences.setQuickAppsSeeded()
+        preferences.setQuickAppsSeedVersion(CURRENT_SEED_VERSION)
     }
 
-    private companion object {
-        const val DEFAULT_SEED_COUNT = 8
+    override suspend fun applyDefaultUpdates() {
+        val prefs = preferences.current()
+        if (prefs.quickAppsSeedVersion >= CURRENT_SEED_VERSION) return
+        if (prefs.quickAppsSeeded && prefs.quickAppsSeedVersion < 2) {
+            // Version 2 adds Claude, pinned first so it shows on the Home screen.
+            val existing = dao.getAll()
+            if (existing.none { it.packageName == KnownApps.CLAUDE_PACKAGE }) {
+                add(KnownApps.CLAUDE_PACKAGE)
+                dao.reorder(listOf(KnownApps.CLAUDE_PACKAGE) + existing.map { it.packageName })
+            }
+        }
+        preferences.setQuickAppsSeedVersion(CURRENT_SEED_VERSION)
+    }
+
+    companion object {
+        private const val DEFAULT_SEED_COUNT = 8
+        const val CURRENT_SEED_VERSION = 2
     }
 }

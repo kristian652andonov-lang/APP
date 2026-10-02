@@ -23,6 +23,8 @@ import com.aura.dashboard.data.repository.OfflineFirstTaskRepository
 import com.aura.dashboard.data.repository.QuickAppRepository
 import com.aura.dashboard.data.repository.ReminderRepository
 import com.aura.dashboard.data.repository.TaskRepository
+import com.aura.dashboard.data.repository.OpenMeteoWeatherRepository
+import com.aura.dashboard.data.repository.WeatherRepository
 import com.aura.dashboard.notifications.AlarmScheduler
 import com.aura.dashboard.notifications.AndroidAlarmScheduler
 import com.aura.dashboard.notifications.NotificationDismisser
@@ -84,4 +86,5 @@ abstract class BindingsModule {
     @Binds abstract fun bindReminderRepository(impl: OfflineFirstReminderRepository): ReminderRepository
     @Binds abstract fun bindQuickAppRepository(impl: DeviceQuickAppRepository): QuickAppRepository
     @Binds abstract fun bindNewsRepository(impl: CachedNewsRepository): NewsRepository
+    @Binds abstract fun bindWeatherRepository(impl: OpenMeteoWeatherRepository): WeatherRepository
 }

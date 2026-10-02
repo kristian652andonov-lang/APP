@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.dp
 import com.aura.dashboard.domain.model.AccentColor
+import com.aura.dashboard.domain.model.AppStyle
 import com.aura.dashboard.domain.model.ThemeMode
 
 private val LocalAuraColors = staticCompositionLocalOf { auraColors(false, accentPalette(AccentColor.LAVENDER, false)) }
@@ -41,10 +42,11 @@ fun ThemeMode.isDark(): Boolean = when (this) {
 fun AuraTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     accent: AccentColor = AccentColor.LAVENDER,
+    style: AppStyle = AppStyle.GLASS,
     content: @Composable () -> Unit,
 ) {
     val palette = remember(accent, darkTheme) { accentPalette(accent, darkTheme) }
-    val colors = remember(palette, darkTheme) { auraColors(darkTheme, palette) }
+    val colors = remember(palette, darkTheme, style) { auraColors(darkTheme, palette, style) }
     val scheme = if (darkTheme) {
         darkColorScheme(
             primary = palette.primary,

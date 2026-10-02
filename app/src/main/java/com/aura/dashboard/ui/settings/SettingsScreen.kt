@@ -31,6 +31,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Article
 import androidx.compose.material.icons.rounded.AlarmOn
+import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.Place
+import androidx.compose.material.icons.rounded.Thermostat
+import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material.icons.rounded.Apps
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
@@ -58,6 +62,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -78,6 +83,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aura.dashboard.R
 import com.aura.dashboard.data.news.Countries
 import com.aura.dashboard.domain.model.AccentColor
+import com.aura.dashboard.domain.model.ClockStyle
+import com.aura.dashboard.domain.model.IconStyle
+import com.aura.dashboard.domain.model.TemperatureUnit
+import com.aura.dashboard.ui.weather.LocationPickerSheet
+import com.aura.dashboard.ui.weather.WeatherEvent
+import com.aura.dashboard.ui.weather.WeatherFormatting
+import com.aura.dashboard.ui.weather.WeatherViewModel
 import com.aura.dashboard.domain.model.NewsCategory
 import com.aura.dashboard.domain.model.NewsRefreshInterval
 import com.aura.dashboard.domain.model.Priority
@@ -100,6 +112,7 @@ import com.aura.dashboard.ui.util.Formatting
 
 @Composable
 fun SettingsScreen(
+    onOpenWeather: () -> Unit,
     onOpenLegal: (LegalDocument) -> Unit,
     onManageApps: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
@@ -115,6 +128,8 @@ fun SettingsScreen(
     var editingName by rememberSaveable { mutableStateOf(false) }
     var pickingCountry by rememberSaveable { mutableStateOf(false) }
     var avatarMenu by rememberSaveable { mutableStateOf(false) }
+    var pickingBackground by rememberSaveable { mutableStateOf(false) }
+    var pickingWeatherLocation by rememberSaveable { mutableStateOf(false) }
     val photoPicker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) viewModel.setAvatar(uri)
     }
@@ -196,7 +211,76 @@ fun SettingsScreen(
                             )
                         }
                     }
+                    Spacer(Modifier.height(18.dp))
+                    Text(stringResource(R.string.settings_style), style = MaterialTheme.typography.bodyLarge, color = colors.textPrimary)
+                    Spacer(Modifier.height(10.dp))
                 }
+                Box(Modifier.padding(bottom = 6.dp).selectableGroup()) {
+                    StylePicker(selected = prefs.appStyle, onSelect = viewModel::setAppStyle)
+                }
+                GroupDivider()
+                SettingsRow(
+                    icon = Icons.Rounded.AutoAwesome,
+                    title = stringResource(R.string.settings_background),
+                    subtitle = stringResource(prefs.backgroundEffect.labelRes()),
+                    onClick = { pickingBackground = true },
+                )
+                GroupDivider()
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.Schedule, contentDescription = null, tint = colors.textSecondary, modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.settings_clock_style), style = MaterialTheme.typography.bodyLarge, color = colors.textPrimary)
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.selectableGroup()) {
+                        ClockStyle.entries.forEach { style ->
+                            AuraChip(
+                                unselectedColor = chipOnCardColor(),
+                                label = stringResource(if (style == ClockStyle.DIGITAL) R.string.clock_digital else R.string.clock_analog),
+                                selected = prefs.clockStyle == style,
+                                onClick = { viewModel.setClockStyle(style) },
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        item {
+            SettingsGroup(stringResource(R.string.settings_section_weather)) {
+                SettingsRow(
+                    icon = Icons.Rounded.Place,
+                    title = stringResource(R.string.settings_weather_location),
+                    subtitle = state.weatherLocation?.let { WeatherFormatting.locationName(context, it) }
+                        ?: stringResource(R.string.weather_choose_location),
+                    onClick = { pickingWeatherLocation = true },
+                )
+                GroupDivider()
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.Thermostat, contentDescription = null, tint = colors.textSecondary, modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.settings_temperature_unit), style = MaterialTheme.typography.bodyLarge, color = colors.textPrimary)
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.selectableGroup()) {
+                        TemperatureUnit.entries.forEach { unit ->
+                            AuraChip(
+                                unselectedColor = chipOnCardColor(),
+                                label = stringResource(if (unit == TemperatureUnit.CELSIUS) R.string.unit_celsius else R.string.unit_fahrenheit),
+                                selected = prefs.temperatureUnit == unit,
+                                onClick = { viewModel.setTemperatureUnit(unit) },
+                            )
+                        }
+                    }
+                }
+                GroupDivider()
+                SettingsRow(
+                    icon = Icons.Rounded.WbSunny,
+                    title = stringResource(R.string.settings_open_forecast),
+                    onClick = onOpenWeather,
+                )
             }
         }
 
@@ -326,6 +410,22 @@ fun SettingsScreen(
                     subtitle = stringResource(R.string.settings_manage_apps_subtitle),
                     onClick = onManageApps,
                 )
+                GroupDivider()
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+                    Text(stringResource(R.string.settings_icon_style), style = MaterialTheme.typography.bodyLarge, color = colors.textPrimary)
+                    Text(stringResource(R.string.settings_icon_style_hint), style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+                    Spacer(Modifier.height(10.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.selectableGroup()) {
+                        IconStyle.entries.forEach { style ->
+                            AuraChip(
+                                unselectedColor = chipOnCardColor(),
+                                label = stringResource(if (style == IconStyle.THEMED) R.string.icons_themed else R.string.icons_original),
+                                selected = prefs.iconStyle == style,
+                                onClick = { viewModel.setIconStyle(style) },
+                            )
+                        }
+                    }
+                }
             }
         }
 
@@ -391,6 +491,21 @@ fun SettingsScreen(
 
     if (editingName) {
         NameDialog(initial = prefs.userName, onConfirm = { viewModel.setName(it); editingName = false }, onDismiss = { editingName = false })
+    }
+    if (pickingBackground) {
+        BackgroundPickerSheet(
+            selected = prefs.backgroundEffect,
+            autoPreview = state.autoBackground,
+            onSelect = viewModel::setBackground,
+            onDismiss = { pickingBackground = false },
+        )
+    }
+    if (pickingWeatherLocation) {
+        val weatherViewModel: WeatherViewModel = hiltViewModel()
+        LaunchedEffect(weatherViewModel) {
+            weatherViewModel.events.collect { if (it is WeatherEvent.LocationUpdated) pickingWeatherLocation = false }
+        }
+        LocationPickerSheet(viewModel = weatherViewModel, onDismiss = { pickingWeatherLocation = false })
     }
     if (pickingCountry) {
         CountryPickerSheet(

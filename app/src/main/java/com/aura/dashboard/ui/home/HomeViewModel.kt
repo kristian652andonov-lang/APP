@@ -11,7 +11,10 @@ import com.aura.dashboard.data.repository.NewsRepository
 import com.aura.dashboard.data.repository.QuickAppRepository
 import com.aura.dashboard.data.repository.ReminderRepository
 import com.aura.dashboard.data.repository.TaskRepository
+import com.aura.dashboard.data.repository.WeatherRepository
+import com.aura.dashboard.data.repository.WeatherState
 import com.aura.dashboard.domain.model.Article
+import com.aura.dashboard.domain.model.ClockStyle
 import com.aura.dashboard.domain.model.NewsCategory
 import com.aura.dashboard.domain.model.NewsError
 import com.aura.dashboard.domain.model.NewsRefreshResult
@@ -35,6 +38,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -67,6 +71,8 @@ data class HomeUiState(
     val quickApps: List<QuickApp> = emptyList(),
     val news: HomeNewsState = HomeNewsState(),
     val isOnline: Boolean = true,
+    val weather: WeatherState = WeatherState(),
+    val clockStyle: ClockStyle = ClockStyle.DIGITAL,
 ) {
     val totalCount: Int get() = todayTasks.size
     val progress: Float get() = if (totalCount == 0) 0f else completedCount.toFloat() / totalCount
@@ -97,6 +103,7 @@ class HomeViewModel @Inject constructor(
     private val connectivity: ConnectivityObserver,
     private val clock: AppClock,
     private val launcher: AppLauncher,
+    private val weather: WeatherRepository,
 ) : ViewModel() {
 
     private val newsStatus = MutableStateFlow(NewsStatus())
@@ -105,7 +112,8 @@ class HomeViewModel @Inject constructor(
 
     private val core = combine(
         preferences.preferences,
-        minuteTicker(clock),
+        // While Home is on screen, check every minute whether the forecast is due a refresh (30 min).
+        minuteTicker(clock).onEach { viewModelScope.launch { weather.refresh(force = false) } },
         tasks.observeTasks(),
         reminders.observeNextReminder(),
         quickApps.observeQuickApps(),
@@ -116,7 +124,13 @@ class HomeViewModel @Inject constructor(
         .distinctUntilChanged()
         .flatMapLatest { country -> news.observeArticles(country, NewsCategory.TOP) }
 
-    val uiState: StateFlow<HomeUiState> = combine(core, articles, newsStatus, connectivity.isOnline) { core, articles, status, online ->
+    val uiState: StateFlow<HomeUiState> = combine(
+        core,
+        articles,
+        newsStatus,
+        connectivity.isOnline,
+        weather.state,
+    ) { core, articles, status, online, weatherState ->
         val zone = clock.zone()
         val zoned = core.now.atZone(zone)
         val today = zoned.toLocalDate()
@@ -138,6 +152,8 @@ class HomeViewModel @Inject constructor(
             quickApps = core.quickApps.filter { it.showOnHome }.take(MAX_HOME_APPS),
             news = HomeNewsState(articles.take(MAX_HOME_ARTICLES), status.isRefreshing, status.error),
             isOnline = online,
+            weather = weatherState,
+            clockStyle = core.prefs.clockStyle,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState())
 
@@ -153,6 +169,7 @@ class HomeViewModel @Inject constructor(
             connectivity.isOnline.drop(1).filter { it }.collect {
                 val prefs = preferences.current()
                 refreshNews(prefs.countryCode, prefs.newsArticleCount, force = false)
+                weather.refresh(force = false)
             }
         }
     }
@@ -195,7 +212,7 @@ class HomeViewModel @Inject constructor(
     fun openWeb(url: String) = launcher.openWeb(url)
 
     companion object {
-        private const val MAX_HOME_APPS = 8
+        private const val MAX_HOME_APPS = 12
         private const val MAX_HOME_ARTICLES = 6
         val STALE_AFTER: Duration = Duration.ofMinutes(30)
 

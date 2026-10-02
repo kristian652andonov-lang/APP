@@ -3,6 +3,12 @@ package com.aura.dashboard.testing
 import com.aura.dashboard.core.time.AppClock
 import com.aura.dashboard.data.preferences.UserPreferencesRepository
 import com.aura.dashboard.domain.model.AccentColor
+import com.aura.dashboard.domain.model.AppStyle
+import com.aura.dashboard.domain.model.BackgroundEffect
+import com.aura.dashboard.domain.model.ClockStyle
+import com.aura.dashboard.domain.model.IconStyle
+import com.aura.dashboard.domain.model.TemperatureUnit
+import com.aura.dashboard.domain.model.WeatherLocation
 import com.aura.dashboard.domain.model.NewsCategory
 import com.aura.dashboard.domain.model.NewsRefreshInterval
 import com.aura.dashboard.domain.model.Priority
@@ -48,4 +54,11 @@ class FakePreferences(initial: UserPreferences = UserPreferences()) : UserPrefer
     override suspend fun setDefaultPriority(priority: Priority) = edit { it.copy(defaultPriority = priority) }
     override suspend fun setTaskSort(sort: TaskSort) = edit { it.copy(taskSort = sort) }
     override suspend fun setQuickAppsSeeded() = edit { it.copy(quickAppsSeeded = true) }
+    override suspend fun setQuickAppsSeedVersion(version: Int) = edit { it.copy(quickAppsSeedVersion = version) }
+    override suspend fun setAppStyle(style: AppStyle) = edit { it.copy(appStyle = style) }
+    override suspend fun setBackgroundEffect(effect: BackgroundEffect) = edit { it.copy(backgroundEffect = effect) }
+    override suspend fun setClockStyle(style: ClockStyle) = edit { it.copy(clockStyle = style) }
+    override suspend fun setIconStyle(style: IconStyle) = edit { it.copy(iconStyle = style) }
+    override suspend fun setTemperatureUnit(unit: TemperatureUnit) = edit { it.copy(temperatureUnit = unit) }
+    override suspend fun setWeatherLocation(location: WeatherLocation?) = edit { it.copy(weatherLocation = location) }
 }

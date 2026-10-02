@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aura.dashboard.data.apps.AppIconLoader
 import com.aura.dashboard.notifications.DeepLink
 import com.aura.dashboard.ui.components.LocalAppIconLoader
+import com.aura.dashboard.ui.components.LocalIconStyle
 import com.aura.dashboard.ui.navigation.AuraApp
 import com.aura.dashboard.ui.theme.AuraTheme
 import com.aura.dashboard.ui.theme.isDark
@@ -54,11 +55,15 @@ class MainActivity : ComponentActivity() {
                 onDispose { }
             }
 
-            AuraTheme(darkTheme = dark, accent = ready.preferences.accentColor) {
-                CompositionLocalProvider(LocalAppIconLoader provides appIconLoader) {
+            AuraTheme(darkTheme = dark, accent = ready.preferences.accentColor, style = ready.preferences.appStyle) {
+                CompositionLocalProvider(
+                    LocalAppIconLoader provides appIconLoader,
+                    LocalIconStyle provides ready.preferences.iconStyle,
+                ) {
                     val deepLink by pendingDeepLink.collectAsStateWithLifecycle()
                     AuraApp(
                         preferences = ready.preferences,
+                        backgroundEffect = ready.backgroundEffect,
                         deepLink = deepLink,
                         onDeepLinkConsumed = { pendingDeepLink.value = null },
                     )

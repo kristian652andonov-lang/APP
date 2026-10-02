@@ -9,7 +9,16 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.tappableElement
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -38,6 +47,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.aura.dashboard.domain.model.BackgroundEffect
 import com.aura.dashboard.domain.model.UserPreferences
 import com.aura.dashboard.notifications.DeepLink
 import com.aura.dashboard.ui.apps.AppsScreen
@@ -50,6 +60,7 @@ import com.aura.dashboard.ui.settings.LegalScreen
 import com.aura.dashboard.ui.settings.SettingsScreen
 import com.aura.dashboard.ui.tasks.TasksScreen
 import com.aura.dashboard.ui.theme.AuraTheme
+import com.aura.dashboard.ui.weather.WeatherScreen
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 
@@ -61,6 +72,7 @@ val LocalBottomBarPadding = compositionLocalOf { 0.dp }
 @Composable
 fun AuraApp(
     preferences: UserPreferences,
+    backgroundEffect: BackgroundEffect,
     deepLink: DeepLink?,
     onDeepLinkConsumed: () -> Unit,
 ) {
@@ -94,12 +106,14 @@ fun AuraApp(
         LocalSnackbarHostState provides snackbarHostState,
         LocalBottomBarPadding provides bottomBarPadding,
     ) {
-        AuraBackground {
+        AuraBackground(effect = backgroundEffect) {
             NavHost(
                 navController = navController,
                 startDestination = startDestination,
                 modifier = Modifier
                     .fillMaxSize()
+                    // Keep content clear of side navigation bars and cutouts in landscape.
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                     .hazeSource(hazeState),
                 enterTransition = { fadeIn(tween(260)) + scaleIn(initialScale = 0.985f, animationSpec = tween(260)) },
                 exitTransition = { fadeOut(tween(180)) },
@@ -121,6 +135,7 @@ fun AuraApp(
                         onOpenNews = { navController.navigateToTopLevel(TopLevelDestination.NEWS) },
                         onOpenApps = { navController.navigateToTopLevel(TopLevelDestination.APPS) },
                         onOpenSettings = { navController.navigateToTopLevel(TopLevelDestination.SETTINGS) },
+                        onOpenWeather = { navController.navigate(WeatherRoute) },
                     )
                 }
                 composable<TasksRoute> { entry ->
@@ -133,6 +148,7 @@ fun AuraApp(
                 composable<AppsRoute> { AppsScreen() }
                 composable<SettingsRoute> {
                     SettingsScreen(
+                        onOpenWeather = { navController.navigate(WeatherRoute) },
                         onOpenLegal = { navController.navigate(LegalRoute(it)) },
                         onManageApps = { navController.navigateToTopLevel(TopLevelDestination.APPS) },
                     )
@@ -148,6 +164,12 @@ fun AuraApp(
                         onBack = { navController.popBackStack() },
                     )
                 }
+                composable<WeatherRoute>(
+                    enterTransition = { slideInHorizontally(tween(300)) { it / 4 } + fadeIn(tween(300)) },
+                    popExitTransition = { slideOutHorizontally(tween(260)) { it / 4 } + fadeOut(tween(200)) },
+                ) {
+                    WeatherScreen(onBack = { navController.popBackStack() })
+                }
                 composable<LegalRoute>(
                     enterTransition = { slideInHorizontally(tween(300)) { it / 4 } + fadeIn(tween(300)) },
                     popExitTransition = { slideOutHorizontally(tween(260)) { it / 4 } + fadeOut(tween(200)) },
@@ -155,6 +177,8 @@ fun AuraApp(
                     LegalScreen(document = entry.toRoute<LegalRoute>().document, onBack = { navController.popBackStack() })
                 }
             }
+
+            SystemNavigationBarBackdrop(Modifier.align(Alignment.BottomCenter))
 
             AnimatedVisibility(
                 visible = currentTopLevel != null,
@@ -191,6 +215,32 @@ fun AuraApp(
             }
         }
     }
+}
+
+/**
+ * With three-button navigation the system buttons are drawn on top of the app (edge-to-edge),
+ * so content scrolling underneath made them look misplaced. This paints the app background
+ * behind the buttons, with a soft fade, so they sit on a calm, readable strip. With gesture
+ * navigation the tappable inset is zero and nothing is drawn.
+ */
+@Composable
+private fun SystemNavigationBarBackdrop(modifier: Modifier = Modifier) {
+    val colors = AuraTheme.colors
+    val buttonsHeight = WindowInsets.tappableElement.asPaddingValues().calculateBottomPadding()
+    if (buttonsHeight <= 0.dp) return
+    val fade = 18.dp
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(buttonsHeight + fade)
+            .background(
+                Brush.verticalGradient(
+                    0f to colors.background.copy(alpha = 0f),
+                    (fade / (buttonsHeight + fade)) to colors.background.copy(alpha = 0.96f),
+                    1f to colors.background,
+                ),
+            ),
+    )
 }
 
 fun NavController.navigateToTopLevel(destination: TopLevelDestination) {

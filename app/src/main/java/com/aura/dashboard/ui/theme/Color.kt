@@ -3,7 +3,9 @@ package com.aura.dashboard.ui.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import com.aura.dashboard.domain.model.AccentColor
+import com.aura.dashboard.domain.model.AppStyle
 
 @Immutable
 data class AccentPalette(
@@ -53,11 +55,61 @@ data class AuraColors(
     val warning: Color,
     val danger: Color,
     val accent: AccentPalette,
+    val style: AppStyle = AppStyle.GLASS,
+    /** Multiplier for card shadows (0 = flat). */
+    val elevationScale: Float = 1f,
+    /** Card/tile border width in dp (0 = none). */
+    val borderWidth: Float = 1f,
+    /** Strength of the soft background glows. */
+    val glowStrength: Float = 1f,
 ) {
     val accentGradient: Brush get() = Brush.linearGradient(listOf(accent.gradientStart, accent.gradientEnd))
 }
 
-fun auraColors(dark: Boolean, accent: AccentPalette): AuraColors = if (!dark) {
+/** Base palette for light/dark, then adjusted for the chosen [AppStyle]. */
+fun auraColors(dark: Boolean, accent: AccentPalette, style: AppStyle = AppStyle.GLASS): AuraColors =
+    baseColors(dark, accent).withStyle(style)
+
+private fun AuraColors.withStyle(style: AppStyle): AuraColors = when (style) {
+    AppStyle.GLASS -> copy(style = style)
+    AppStyle.TRANSPARENT -> copy(
+        style = style,
+        glass = if (isDark) Color(0x17FFFFFF) else Color(0x5CFFFFFF),
+        glassStrong = if (isDark) Color(0x2EFFFFFF) else Color(0xB3FFFFFF),
+        glassBorder = if (isDark) Color(0x33FFFFFF) else Color(0xF2FFFFFF),
+        elevationScale = 0.15f,
+        glowStrength = 1.15f,
+    )
+    AppStyle.SOLID -> copy(
+        style = style,
+        glass = if (isDark) Color(0xFF1E1B29) else Color.White,
+        glassStrong = if (isDark) Color(0xFF24212F) else Color.White,
+        glassBorder = Color.Transparent,
+        borderWidth = 0f,
+        elevationScale = 0.6f,
+        glowStrength = 0.8f,
+    )
+    AppStyle.PASTEL -> copy(
+        style = style,
+        glass = if (isDark) accent.container.copy(alpha = 0.62f) else lerp(accent.container, Color.White, 0.3f).copy(alpha = 0.94f),
+        glassStrong = if (isDark) accent.container.copy(alpha = 0.85f) else lerp(accent.container, Color.White, 0.55f),
+        glassBorder = Color.Transparent,
+        borderWidth = 0f,
+        elevationScale = 0f,
+        glowStrength = 1.1f,
+    )
+    AppStyle.MINIMAL -> copy(
+        style = style,
+        glass = Color.Transparent,
+        glassStrong = if (isDark) Color(0xF2121019) else Color(0xF2F7F6FC),
+        glassBorder = if (isDark) Color(0x33FFFFFF) else Color(0x2E1C1A2B),
+        borderWidth = 1.2f,
+        elevationScale = 0f,
+        glowStrength = 0.45f,
+    )
+}
+
+private fun baseColors(dark: Boolean, accent: AccentPalette): AuraColors = if (!dark) {
     AuraColors(
         isDark = false,
         background = Color(0xFFF7F6FC),

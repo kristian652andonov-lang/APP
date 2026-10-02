@@ -19,17 +19,22 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import coil3.ImageLoader
@@ -42,6 +47,10 @@ import com.aura.dashboard.data.repository.NewsRepository
 import com.aura.dashboard.data.repository.QuickAppRepository
 import com.aura.dashboard.data.repository.ReminderRepository
 import com.aura.dashboard.data.repository.TaskRepository
+import com.aura.dashboard.data.repository.WeatherRepository
+import com.aura.dashboard.domain.model.AppStyle
+import com.aura.dashboard.domain.model.BackgroundEffect
+import com.aura.dashboard.domain.model.ClockStyle
 import com.aura.dashboard.domain.model.NewsCategory
 import com.aura.dashboard.domain.model.Priority
 import com.aura.dashboard.domain.model.Reminder
@@ -94,6 +103,7 @@ class AppScreenshotTest {
     @Inject lateinit var reminders: ReminderRepository
     @Inject lateinit var quickApps: QuickAppRepository
     @Inject lateinit var news: NewsRepository
+    @Inject lateinit var weather: WeatherRepository
 
     private val context: Context get() = ApplicationProvider.getApplicationContext()
     private val outputDir = File(System.getProperty("aura.screenshotDir") ?: "build/screenshots").apply { mkdirs() }
@@ -163,6 +173,67 @@ class AppScreenshotTest {
     }
 
     @Test
+    fun captureAppearances() {
+        installSampleApps()
+        runBlocking { seed() }
+        runBlocking { weather.refresh(force = true) }
+
+        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+            runCatching {
+                composeRule.waitUntil(timeoutMillis = 30_000) { weather.state.value.snapshot != null }
+            }.onFailure { throw AssertionError("No forecast loaded: ${weather.state.value}", it) }
+            settle(8)
+            capture("30_home_glass_auto")
+
+            composeRule.onNode(hasClickLabel("Open weather forecast")).performClick()
+            settle(8)
+            capture("31_weather_light")
+            scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+            settle()
+
+            listOf(
+                Triple(AppStyle.TRANSPARENT, BackgroundEffect.NIGHT_SKY, ThemeMode.DARK),
+                Triple(AppStyle.SOLID, BackgroundEffect.SNOW, ThemeMode.LIGHT),
+                Triple(AppStyle.PASTEL, BackgroundEffect.PETALS, ThemeMode.LIGHT),
+                Triple(AppStyle.MINIMAL, BackgroundEffect.FLOWING_LINES, ThemeMode.LIGHT),
+                Triple(AppStyle.GLASS, BackgroundEffect.RAIN, ThemeMode.DARK),
+                Triple(AppStyle.GLASS, BackgroundEffect.AURORA, ThemeMode.DARK),
+            ).forEachIndexed { index, (style, effect, theme) ->
+                runBlocking {
+                    preferences.setAppStyle(style)
+                    preferences.setBackgroundEffect(effect)
+                    preferences.setThemeMode(theme)
+                }
+                settle(6)
+                capture("${32 + index}_home_${style.name.lowercase()}_${effect.name.lowercase()}_${theme.name.lowercase()}")
+            }
+
+            runBlocking {
+                preferences.setClockStyle(ClockStyle.ANALOG)
+                preferences.setAppStyle(AppStyle.SOLID)
+                preferences.setThemeMode(ThemeMode.LIGHT)
+                preferences.setBackgroundEffect(BackgroundEffect.SUNNY)
+            }
+            settle(6)
+            capture("38_home_solid_analog")
+            tab("Apps")
+            settle(6)
+            capture("39_apps_solid")
+
+            runBlocking { preferences.setAppStyle(AppStyle.GLASS) }
+            tab("Settings")
+            settle()
+            capture("40_settings_appearance")
+            composeRule.onAllNodes(hasScrollAction())[0].performScrollToNode(hasText("Live background"))
+            settle()
+            // Invoke the action directly: the row can sit under the floating bottom bar.
+            composeRule.onNode(hasText("Live background") and hasClickAction()).performSemanticsAction(SemanticsActions.OnClick)
+            settle(6)
+            capture("41_background_picker")
+        }
+    }
+
+    @Test
     fun captureOnboarding() {
         ActivityScenario.launch(MainActivity::class.java).use {
             settle()
@@ -201,6 +272,10 @@ class AppScreenshotTest {
         reminders.save(Reminder(title = "Take a break", description = "Stretch and rest your eyes", startDate = breakTime.toLocalDate(), time = breakTime.toLocalTime()))
         reminders.save(Reminder(title = "Drink water", startDate = today, time = LocalTime.of(14, 30), repeat = Repeat.DAILY))
         reminders.save(Reminder(title = "Team stand-up", startDate = today, time = LocalTime.of(9, 30), repeat = Repeat.WEEKDAYS))
+    }
+
+    private fun hasClickLabel(label: String) = SemanticsMatcher("click label = $label") {
+        it.config.getOrNull(SemanticsActions.OnClick)?.label == label
     }
 
     private fun tab(label: String) {
@@ -242,6 +317,7 @@ class AppScreenshotTest {
     private fun installSampleApps() {
         val packageManager = shadowOf(context.packageManager)
         listOf(
+            Triple("com.anthropic.claude", "Claude", intArrayOf(0xFFE8A27C.toInt(), 0xFFD97757.toInt())),
             Triple("com.zhiliaoapp.musically", "TikTok", intArrayOf(0xFF111111.toInt(), 0xFF25F4EE.toInt())),
             Triple("com.instagram.android", "Instagram", intArrayOf(0xFFFEDA75.toInt(), 0xFFD62976.toInt())),
             Triple("com.google.android.youtube", "YouTube", intArrayOf(0xFFFF4E45.toInt(), 0xFFFF0000.toInt())),

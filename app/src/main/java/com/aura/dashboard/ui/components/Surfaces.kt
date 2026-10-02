@@ -31,13 +31,23 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.aura.dashboard.domain.model.AppStyle
+import com.aura.dashboard.domain.model.BackgroundEffect
+import com.aura.dashboard.ui.background.LiveBackground
 import com.aura.dashboard.ui.theme.AuraTheme
 
-/** Soft pastel backdrop: a light base with large, blurred-looking radial glows. */
+/**
+ * Soft pastel backdrop: a light base with large, blurred-looking radial glows, plus an optional
+ * animated [effect] (snow, rain, stars…) drawn between the backdrop and the content.
+ */
 @Composable
-fun AuraBackground(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
+fun AuraBackground(
+    modifier: Modifier = Modifier,
+    effect: BackgroundEffect = BackgroundEffect.NONE,
+    content: @Composable BoxScope.() -> Unit,
+) {
     val colors = AuraTheme.colors
-    val glowAlpha = if (colors.isDark) 0.75f else 1f
+    val glowAlpha = ((if (colors.isDark) 0.75f else 1f) * colors.glowStrength).coerceAtMost(1f)
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -73,8 +83,10 @@ fun AuraBackground(modifier: Modifier = Modifier, content: @Composable BoxScope.
                     center = Offset(w * 0.2f, h * 0.85f),
                 )
             },
-        content = content,
-    )
+    ) {
+        LiveBackground(effect)
+        content()
+    }
 }
 
 /**
@@ -107,10 +119,10 @@ fun GlassCard(
                 scaleX = scale
                 scaleY = scale
             }
-            .shadow(elevation, shape, clip = false, ambientColor = shadowColor, spotColor = shadowColor)
+            .shadow(elevation * colors.elevationScale, shape, clip = false, ambientColor = shadowColor, spotColor = shadowColor)
             .clip(shape)
             .background(if (strong) colors.glassStrong else colors.glass)
-            .border(1.dp, glassBorderBrush(), shape)
+            .then(if (colors.borderWidth > 0f) Modifier.border(colors.borderWidth.dp, glassBorderBrush(), shape) else Modifier)
             .then(
                 if (onClick != null) {
                     Modifier.clickable(
@@ -132,7 +144,9 @@ fun GlassCard(
 @Composable
 fun glassBorderBrush(): Brush {
     val colors = AuraTheme.colors
+    // Glass catches light on its top edge; the other styles use an even hairline.
+    val fade = if (colors.style == AppStyle.GLASS) 0.25f else 0.8f
     return Brush.linearGradient(
-        listOf(colors.glassBorder, colors.glassBorder.copy(alpha = colors.glassBorder.alpha * 0.25f)),
+        listOf(colors.glassBorder, colors.glassBorder.copy(alpha = colors.glassBorder.alpha * fade)),
     )
 }

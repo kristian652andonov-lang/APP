@@ -31,6 +31,8 @@ const val NO_ID = -1L
 
 @Serializable data class LegalRoute(val document: LegalDocument)
 
+@Serializable data object WeatherRoute
+
 @Keep
 enum class LegalDocument { PRIVACY, TERMS, LICENSES }
 

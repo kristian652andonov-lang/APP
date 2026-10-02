@@ -1,6 +1,6 @@
 # Aura — your day, organized
 
-Aura is a calm, premium personal dashboard for Android. Today's tasks, upcoming reminders, your favorite apps and the latest news from your country all live on one home screen. It's built with Kotlin, Jetpack Compose and Material 3, with a soft pastel, glass-like design and a proper dark mode.
+Aura is a calm, premium personal dashboard for Android. A clock and the local weather, today's tasks, upcoming reminders, your favorite apps and the latest news from your country all live on one home screen. It's built with Kotlin, Jetpack Compose and Material 3. The design is soft and pastel, with five appearance styles (Glass, Transparent, Solid, Pastel, Minimal), animated live backgrounds that can follow the weather outside, and a proper dark mode.
 
 <p>
   <img src="docs/screenshots/01_home_light.jpg" width="200" alt="Home dashboard, light theme" />
@@ -15,13 +15,25 @@ Aura is a calm, premium personal dashboard for Android. Today's tasks, upcoming 
   <img src="docs/screenshots/09_tasks_dark.jpg" width="200" alt="Tasks, dark theme" />
 </p>
 <p>
+  <img src="docs/screenshots/31_weather_light.jpg" width="200" alt="Weather forecast" />
+  <img src="docs/screenshots/32_home_transparent_night_sky_dark.jpg" width="200" alt="Transparent style with the moon and stars background" />
+  <img src="docs/screenshots/34_home_pastel_petals_light.jpg" width="200" alt="Pastel style with falling petals" />
+  <img src="docs/screenshots/35_home_minimal_flowing_lines_light.jpg" width="200" alt="Minimal style with moving lines" />
+</p>
+<p>
+  <img src="docs/screenshots/36_home_glass_rain_dark.jpg" width="200" alt="Glass style with rain, dark theme" />
+  <img src="docs/screenshots/37_home_glass_aurora_dark.jpg" width="200" alt="Aurora background" />
+  <img src="docs/screenshots/38_home_solid_analog.jpg" width="200" alt="Solid style with an analog clock" />
+  <img src="docs/screenshots/41_background_picker.jpg" width="200" alt="Live background picker" />
+</p>
+<p>
   <img src="docs/screenshots/20_onboarding_welcome.jpg" width="200" alt="Onboarding" />
   <img src="docs/screenshots/22_onboarding_name.jpg" width="200" alt="Onboarding: name" />
   <img src="docs/screenshots/23_onboarding_country.jpg" width="200" alt="Onboarding: country" />
   <img src="docs/screenshots/24_onboarding_notifications.jpg" width="200" alt="Onboarding: notifications" />
 </p>
 
-> Screenshots are rendered from the real app on the JVM (Robolectric) with sample tasks and placeholder app icons; see [Testing](#testing). Publishers' news photos are blurred, and the News screen screenshots aren't committed for the same reason. Generate them locally with the screenshot test.
+> Screenshots are rendered from the real app on the JVM (Robolectric) with sample tasks, live weather and placeholder apps; see [Testing](#testing). Animated backgrounds are shown as a single frame. Publishers' news photos are blurred, and the News screen screenshots aren't committed for the same reason. Generate them locally with the screenshot test.
 
 ---
 
@@ -50,14 +62,18 @@ Aura is a calm, premium personal dashboard for Android. Today's tasks, upcoming 
 
 | Area | What you get |
 |---|---|
-| **Home dashboard** | Time-based greeting ("Good evening, Kristian") and today's date; an animated progress ring ("2 of 5 completed"); the next reminder with a live countdown; Quick Apps grid; a news carousel; today's tasks with animated checkboxes and quick add. |
+| **Home dashboard** | Time-based greeting ("Good evening, Kristian") and today's date; a clock (digital with seconds, or analog) next to the current weather; an animated progress ring ("2 of 5 completed"); the next reminder with a live countdown; Quick Apps grid; a news carousel; today's tasks with animated checkboxes and quick add. |
 | **Tasks** | Create, edit and delete tasks, mark them done or undo, with optional due date and time, notes, Low/Normal/High priority and repeat (daily, weekdays, weekends, weekly, monthly). Filters for All, Today, Upcoming and Completed; sort by time, priority or creation date; date-grouped sections; hide or clear completed tasks; undo after delete. Optional notification at the due time. |
 | **Reminders** | Title, description, date, time and repeat (Never, Every day, Weekdays, Weekends, Weekly, Monthly). Each reminder can be paused or resumed. Notifications offer *Snooze 10 min*, and tapping one opens that reminder. Reminders survive app close, reboot and time-zone changes. |
-| **Quick Apps** | Detects installed launchable apps, with search ("Search apps…"), add, remove, drag-to-reorder (plus accessible move up/down), custom names and "show on Home". Taps launch the real app. If an app is missing you get a friendly dialog with *Get the app* (Play Store) or *Open website*. |
+| **Quick Apps** | Detects installed launchable apps, with search ("Search apps…"), add, remove, drag-to-reorder (plus accessible move up/down), custom names and "show on Home". Taps launch the real app. If an app is missing you get a friendly dialog with *Get the app* (Play Store) or *Open website*. **Themed icons** replace the phone's own launcher icons with tiles that match the selected style and accent color (switchable back to original icons). **Claude** is pinned first. |
+| **Weather** | Current conditions, feels-like, high/low, humidity, wind, sunrise and sunset; the next 24 hours; a 7-day forecast with temperature bars. Animated weather icons. Location: your country's capital by default, a city search, or "Use my location" (approximate, optional). °C or °F. Cached for offline use and refreshed automatically once it's 30 minutes old. Data by [Open-Meteo](https://open-meteo.com) (free, no API key). |
+| **Appearance styles** | **Glass** (frosted, the default), **Transparent** (see-through cards that let the background show), **Solid** (opaque cards and bold, filled icons), **Pastel** (cards and icons tinted in soft per-app colors) and **Minimal** (hairline outlines, no shadows). Each one works in light and dark mode with every accent color. |
+| **Live backgrounds** | Animated scenes drawn behind the app: Match weather (automatic), Sunny, Clouds, Rain, Thunderstorm, Snow, Moon & stars, Falling stars, Moving lines, Aurora, Bubbles, Fireflies, Petals, or None. Lightweight (one canvas), paused in the background, and still when "Remove animations" is on. |
 | **News** | Real headlines for the selected country (default **Bulgaria**), with category chips, pull-to-refresh, skeleton loading, and empty, error and offline states. Every article shows its source and publication time and opens on the publisher's site in a Custom Tab. The latest results are cached for offline use. |
-| **Settings** | Name, profile photo (system photo picker, no storage permission) and country. Light, dark or system theme with five accent colors. Toggles for reminders, sound and vibration, plus permission status, precise-timing access and battery-optimization guidance. News country, categories, article count and background refresh frequency. Manage Quick Apps. Show completed tasks and default priority. Version, privacy policy, terms and open-source licenses. |
+| **Settings** | Name, profile photo (system photo picker, no storage permission) and country. Light, dark or system theme with five accent colors, the appearance style, live background and clock style. Weather location and temperature unit. Themed or original app icons. Toggles for reminders, sound and vibration, plus permission status, precise-timing access and battery-optimization guidance. News country, categories, article count and background refresh frequency. Manage Quick Apps. Show completed tasks and default priority. Version, privacy policy, terms and open-source licenses. |
 | **Onboarding** | Three intro pages, then "What should we call you?", "Which country are you in?" (Bulgaria preselected) and an explained notification permission request. |
 | **Dark mode** | A dedicated deep-charcoal/purple palette with lighter cards, pastel accents and correctly tinted system bars, rather than an inversion of the light theme. |
+| **System navigation** | Edge-to-edge on every phone. With 3-button navigation, a soft backdrop sits behind the system buttons so content never shows through them, and the floating bottom bar sits above them. |
 
 ## Architecture
 
@@ -70,16 +86,19 @@ MVVM with a repository layer, unidirectional data flow and Hilt for dependency i
         │
  Repositories (interfaces)                 data/repository   TaskRepository, ReminderRepository,
         │                                                    NewsRepository, QuickAppRepository,
-        │                                                    UserPreferencesRepository
+        │                                                    WeatherRepository, UserPreferencesRepository
  Data sources                              data/local (Room), data/preferences (DataStore),
-                                           data/news (Retrofit + RSS), data/apps (PackageManager)
+                                           data/news (Retrofit + RSS), data/apps (PackageManager),
+                                           data/weather (Open-Meteo + location)
  Platform services                         notifications/ (AlarmManager, receivers, channels),
                                            work/ (WorkManager), core/network (connectivity)
  Pure domain logic                         domain/ (models, recurrence, task queries; unit-tested)
 ```
 
 * **Offline-first.** Screens observe Room and DataStore flows, and network results are written into the cache. Every repository sits behind an interface (`OfflineFirstTaskRepository`, `CachedNewsRepository`, …), so a cloud-sync implementation can be added later without touching the UI.
-* **Pure domain logic.** `Recurrence` (next occurrence, DST-safe) and `TaskQueries` (Today, Upcoming, sorting) have no Android dependencies and are covered by unit tests.
+* **Pure domain logic.** `Recurrence` (next occurrence, DST-safe), `TaskQueries` (Today, Upcoming, sorting), `WeatherMapping` (WMO codes, forecast parsing) and `SceneResolver` (which background matches the weather) have no Android dependencies and are covered by unit tests.
+* **Live backgrounds** are a single `Canvas` in `ui/background/`. Every particle's position is a pure function of time and a fixed random seed, so nothing is allocated per frame. Time comes from `withInfiniteAnimationFrameNanos`, which pauses when the app is in the background and is frozen in UI tests.
+* **Appearance styles** are tokens on `AuraColors` (card fill, border width, shadow scale, glow strength). `GlassCard`, the bottom bar and the themed app icons read them, so screens don't need to know which style is active.
 * **Tech stack.** Kotlin 2.4 · AGP 9.4 (built-in Kotlin) · Compose BOM 2026.09 (Material 3 1.4) · Navigation Compose (type-safe routes) · Hilt 2.60 · Room 2.8 · DataStore · WorkManager · Retrofit 3 + OkHttp 5 + kotlinx.serialization · Coil 3 · Haze (backdrop blur) · Reorderable · minSdk 26, targetSdk 36, compileSdk 37.
 
 ## Project structure
@@ -105,15 +124,17 @@ MVVM with a repository layer, unidirectional data flow and Hilt for dependency i
 │       │       │   ├── preferences/        # DataStore-backed preferences
 │       │       │   ├── repository/         # Task, Reminder, News, QuickApp repositories
 │       │       │   ├── news/               # NewsData.io client, RSS parser, curated feeds, countries
+│       │       │   ├── weather/            # Open-Meteo client, WMO mapping, capitals, device location
 │       │       │   ├── apps/               # Installed apps, launcher, icon cache, known apps
 │       │       │   └── profile/            # Avatar storage
 │       │       ├── notifications/          # AlarmScheduler, receivers, notifier, channels, deep links
 │       │       ├── work/                   # Background news refresh
 │       │       └── ui/
-│       │           ├── theme/              # Colors (light/dark, accents), typography, shapes
-│       │           ├── components/         # GlassCard, AuraCheckbox, ProgressRing, chips, skeletons…
+│       │           ├── theme/              # Colors (light/dark, accents, styles), typography, shapes
+│       │           ├── background/         # Animated live backgrounds and the weather → scene mapping
+│       │           ├── components/         # GlassCard, AppIcon, clocks, AuraCheckbox, ProgressRing, chips…
 │       │           ├── navigation/         # Routes, NavHost, floating glass bottom bar
-│       │           ├── home/ tasks/ reminders/ news/ apps/ settings/ onboarding/
+│       │           ├── home/ tasks/ reminders/ news/ weather/ apps/ settings/ onboarding/
 │       │           └── util/               # Formatting, tickers
 │       └── test/                   # JVM, Robolectric and screenshot tests
 ├── server/news-proxy/              # Optional Cloudflare Worker that hides the news API key
@@ -130,7 +151,7 @@ MVVM with a repository layer, unidirectional data flow and Hilt for dependency i
 * Clone the repo and open the root folder in Android Studio, or run the Gradle wrapper (`./gradlew`), which downloads Gradle 9.8 itself.
 * For command-line builds, point Gradle at your SDK through `local.properties` (`sdk.dir=/path/to/Android/sdk`) or the `ANDROID_HOME` environment variable. `local.properties` is git-ignored.
 
-**No API key is required.** Out of the box, news for Bulgaria, the UK and Germany comes from publishers' public RSS feeds.
+**No API key is required.** Out of the box, news for Bulgaria, the UK and Germany comes from publishers' public RSS feeds, and the weather comes from Open-Meteo, which is keyless.
 
 ## Building and running the APK
 
@@ -213,13 +234,14 @@ Aura asks for as little as possible:
 
 | Permission | Why | When it's requested |
 |---|---|---|
-| `INTERNET` | Download news and images | Install time (normal permission) |
+| `INTERNET` | Download news, images and the weather | Install time (normal permission) |
 | `ACCESS_NETWORK_STATE` | Offline indicator; refresh when back online | Install time |
 | `POST_NOTIFICATIONS` (Android 13+) | Deliver reminders and task alerts | At the end of onboarding, with an explanation. Can be re-requested from Reminders and Settings, or the app links to system settings once permanently declined. |
 | `SCHEDULE_EXACT_ALARM` (Android 12+) | Fire reminders at the exact minute | Never forced. Reminders fall back to inexact alarms and the app offers an *Allow* button ("Alarms & reminders"). |
 | `RECEIVE_BOOT_COMPLETED` | Restore reminders after a restart | Install time |
+| `ACCESS_COARSE_LOCATION` | Optional: the weather for where you are | Only when you tap *Use my location* in the weather location picker. Approximate location only, read once, never in the background, and rounded to about 1 km. Without it the forecast uses your country's capital or a city you search for. |
 
-**Not used:** `QUERY_ALL_PACKAGES`, because app visibility comes from a narrow `<queries>` launcher intent; storage permissions, because the photo picker is used; location; contacts; and `USE_EXACT_ALARM`.
+**Not used:** `QUERY_ALL_PACKAGES`, because app visibility comes from a narrow `<queries>` launcher intent; storage permissions, because the photo picker is used; precise or background location; contacts; and `USE_EXACT_ALARM`.
 
 ## Reminders and notifications
 
@@ -233,20 +255,21 @@ Aura asks for as little as possible:
 ## Data storage
 
 * **Room** (`aura.db`) stores tasks, reminders, Quick Apps and the news cache, including the last-fetch time per country and category. The schema is exported to `app/schemas/`. Future schema changes must ship migrations; destructive fallback is enabled only for downgrades.
-* **DataStore (Preferences)** stores the profile, country, theme, accent, notification and news settings, and task preferences. A corrupted file falls back to defaults.
-* **Files:** the profile photo is copied to private storage as a 512 px JPEG.
+* **DataStore (Preferences)** stores the profile, country, theme, accent, style, background, clock, icon style, weather location and unit, notification and news settings, and task preferences. A corrupted file falls back to defaults.
+* **Files:** the profile photo is copied to private storage as a 512 px JPEG. The latest forecast is cached in `files/weather/forecast.json`.
 * **Backups:** Android Auto Backup and device transfer include the database, preferences and avatar. Caches are excluded.
-* Everything survives app restarts, process death and reboots. Nothing leaves the device except news requests.
+* Everything survives app restarts, process death and reboots. Nothing leaves the device except news requests and weather requests (the chosen place's coordinates, rounded to about 1 km).
 
 ## Quick Apps launcher
 
 * `InstalledAppsSource` lists `ACTION_MAIN`/`CATEGORY_LAUNCHER` activities and updates live through package added/removed broadcasts.
 * `AppLauncher` uses `getLaunchIntentForPackage`. For popular apps that aren't installed (`KnownApps`), it offers the Play Store listing (`market://`, with an `https://` fallback) or the app's website.
-* On first run, installed popular apps (TikTok, Instagram, YouTube, Spotify, Discord, WhatsApp, Viber, Telegram, …) are pinned automatically. Any installed app can be added, and the list isn't hard-coded.
+* On first run, installed popular apps (Claude, TikTok, Instagram, YouTube, Spotify, Discord, WhatsApp, Viber, Telegram, …) are pinned automatically. Any installed app can be added, and the list isn't hard-coded. Updating from 1.0 pins Claude once, at the front; removing it afterwards sticks.
+* **Themed icons** (`ui/apps/AppGlyphs.kt`, `ui/components/Media.kt`) draw each app as a glyph on a tile styled for the current appearance: frosted for Glass, see-through for Transparent, filled accent gradient for Solid, a soft per-app color for Pastel and an outline for Minimal. Well-known apps get a fitting symbol (a music note for TikTok, a camera for Instagram, a spark for Claude and so on), system apps are matched by name (Camera, Clock, Settings…), and anything else gets a monogram. These are generic symbols, not the brands' logos. *Settings → App icons → Original* switches back to the real launcher icons.
 
 ## Offline support and error handling
 
-* Tasks, reminders, the launcher and settings are fully local. News shows the cached results with an **Offline** pill and refreshes automatically when connectivity returns, if the cache is stale.
+* Tasks, reminders, the launcher and settings are fully local. News shows the cached results with an **Offline** pill and refreshes automatically when connectivity returns, if the cache is stale. The weather keeps showing the last forecast with its "Updated … ago" time, and refreshes when you're back online.
 * A background `WorkManager` job keeps headlines fresh. You choose the frequency in Settings: manual, or every 1/3/6/12/24 h. It runs only when the device is online and the battery isn't low.
 * Each failure type maps to a specific, friendly message:
 
@@ -270,7 +293,8 @@ Aura asks for as little as possible:
 * Every icon button has a content description. Checkboxes, switches, tabs and chips expose proper roles and states, and headings are marked for TalkBack.
 * Task completion is conveyed by check, strikethrough and fade, not color alone. Priority shows a flag and text. Overdue tasks get an icon plus "Overdue".
 * Text colors were tuned for WCAG AA contrast in both themes. Touch targets are at least 48 dp. Text uses `sp` and scales with system font size.
-* Layouts use weights, lazy lists and insets rather than fixed screen sizes. Edge-to-edge is handled with system bar insets, and the bottom bar is width-capped on large screens.
+* Layouts use weights, lazy lists and insets rather than fixed screen sizes. Edge-to-edge is handled with system bar insets (including a backdrop behind 3-button navigation and horizontal display-cutout insets in landscape), and the bottom bar is width-capped on large screens.
+* Live backgrounds stop moving when *Remove animations* is on in Android's accessibility settings, and the thunderstorm flashes are disabled entirely in that case. Flashes are gentle and infrequent by design.
 
 ## Testing
 
@@ -278,7 +302,7 @@ Aura asks for as little as possible:
 ./gradlew testDebugUnitTest
 ```
 
-62 tests run on the JVM:
+76 tests run on the JVM (plus the opt-in screenshot tests below):
 
 | Test class | What it covers |
 |---|---|
@@ -288,9 +312,13 @@ Aura asks for as little as possible:
 | `NewsDataProviderTest` | Pagination, error mapping and malformed JSON, against a MockWebServer |
 | `RssMergeTest` | De-duplication; future-dated items |
 | `HtmlTextTest` | Entities, tag stripping, truncation |
+| `WeatherMappingTest` | WMO code mapping, parsing a real Open-Meteo response in the location's time zone, missing values, a capital for every supported country |
+| `SceneResolverTest` | Which live background "Match weather" picks for each condition, day and night |
+| `WeatherRepositoryTest` (Robolectric) | Against a MockWebServer: coordinates rounded to ~1 km, cache reuse until stale, the capital fallback, and back-off after server errors |
+| `QuickAppRepositoryTest` (Robolectric) | The one-time Claude pin for existing users, and that it never comes back once removed |
 | `RepositoriesTest` (Robolectric) | Room and real `AlarmManager` scheduling for tasks and reminders: recurring completion and undo, snooze, firing, disabling |
 
-**Screenshot / end-to-end run (opt-in, needs internet).** This boots the real app with Hilt, Room, DataStore and live news feeds in Robolectric, then walks through every screen in light and dark mode:
+**Screenshot / end-to-end run (opt-in, needs internet).** This boots the real app with Hilt, Room, DataStore, live news feeds and the live forecast in Robolectric, then walks through every screen in light and dark mode, plus each appearance style, several backgrounds, the Weather screen and the background picker:
 
 ```bash
 ./gradlew :app:testDebugUnitTest --tests '*AppScreenshotTest*' -Paura.screenshots=true
@@ -303,7 +331,9 @@ Aura asks for as little as possible:
 |---|---|
 | App name | `app/src/main/res/values/strings.xml` → `app_name` (used everywhere, including notifications) |
 | Application ID / version | `gradle.properties` → `aura.applicationId`, `aura.versionCode`, `aura.versionName` |
-| Colors and accents | `ui/theme/Color.kt` |
+| Colors, accents and appearance styles | `ui/theme/Color.kt` |
+| Live backgrounds | `ui/background/LiveBackground.kt` (one function per scene) |
+| App glyphs for themed icons | `ui/apps/AppGlyphs.kt` |
 | Typography | `ui/theme/Type.kt` (Manrope is bundled in `res/font`) |
 | Launcher icon | `res/drawable/ic_launcher_*.xml` (adaptive and themed icon) |
 | Suggested apps | `data/apps/KnownApps.kt` |
@@ -314,9 +344,11 @@ Aura asks for as little as possible:
 * Some manufacturers aggressively kill background apps. If reminders are late, exclude Aura from battery optimization (Settings → Notifications → Battery optimization).
 * Without "Alarms & reminders" access on Android 12+, Android may deliver reminders a few minutes late. The app shows this clearly and offers a one-tap fix.
 * Without a news API configured, keyless news covers Bulgaria, the UK and Germany.
+* Themed icons use generic symbols, so a few apps share a similar glyph. Apps Aura doesn't recognize get a monogram tile.
+* "Use my location" needs a location provider to be switched on. If none answers within 10 seconds, the last known location is used, and failing that Aura asks you to turn location on or search for your city.
 * The frosted-glass blur behind the bottom bar needs Android 12+. Older versions get a translucent surface instead.
 * The UI is in English. All strings are in `strings.xml`, ready for translation (e.g. `values-bg/`).
 
 ## Licenses
 
-Aura uses open-source libraries under the Apache License 2.0 and the Manrope typeface under the SIL Open Font License 1.1. Both are listed in-app under Settings → About → Open-source licenses. News content belongs to its publishers.
+Aura uses open-source libraries under the Apache License 2.0 and the Manrope typeface under the SIL Open Font License 1.1. Both are listed in-app under Settings → About → Open-source licenses. News content belongs to its publishers. Weather data is by [Open-Meteo.com](https://open-meteo.com) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), credited on the Weather screen.

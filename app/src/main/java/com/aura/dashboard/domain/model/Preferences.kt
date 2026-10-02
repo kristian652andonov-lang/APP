@@ -13,6 +13,22 @@ enum class AccentColor { LAVENDER, OCEAN, ROSE, MINT, PEACH }
 
 enum class TaskSort { TIME, PRIORITY, CREATED }
 
+/** How cards, bars and icons are rendered. */
+enum class AppStyle { GLASS, TRANSPARENT, SOLID, PASTEL, MINIMAL }
+
+/** Animated scene drawn behind every screen. AUTO follows the current weather. */
+enum class BackgroundEffect {
+    NONE, AUTO, SUNNY, CLOUDS, RAIN, THUNDER, SNOW, NIGHT_SKY, SHOOTING_STARS,
+    FLOWING_LINES, AURORA, BUBBLES, FIREFLIES, PETALS,
+}
+
+enum class ClockStyle { DIGITAL, ANALOG }
+
+/** Themed glyph icons that match the app, or each app's original launcher icon. */
+enum class IconStyle { THEMED, ORIGINAL }
+
+enum class TemperatureUnit { CELSIUS, FAHRENHEIT }
+
 enum class NewsRefreshInterval(val hours: Long) {
     MANUAL(0), HOURLY(1), EVERY_3_HOURS(3), EVERY_6_HOURS(6), EVERY_12_HOURS(12), DAILY(24)
 }
@@ -34,6 +50,15 @@ data class UserPreferences(
     val defaultPriority: Priority = Priority.NORMAL,
     val taskSort: TaskSort = TaskSort.TIME,
     val quickAppsSeeded: Boolean = false,
+    /** Bumped when new default Quick Apps should be offered to existing users. */
+    val quickAppsSeedVersion: Int = 0,
+    val appStyle: AppStyle = AppStyle.GLASS,
+    val backgroundEffect: BackgroundEffect = BackgroundEffect.AUTO,
+    val clockStyle: ClockStyle = ClockStyle.DIGITAL,
+    val iconStyle: IconStyle = IconStyle.THEMED,
+    val temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
+    /** Chosen weather location; null means "capital of the selected country". */
+    val weatherLocation: WeatherLocation? = null,
 ) {
     companion object {
         const val DEFAULT_COUNTRY = "BG"

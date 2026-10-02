@@ -9,6 +9,7 @@ import com.aura.dashboard.data.news.api.NewsDataService
 import com.aura.dashboard.data.news.rss.RssNewsProvider
 import com.aura.dashboard.data.news.rss.RssParser
 import com.aura.dashboard.data.repository.NewsProviderChain
+import com.aura.dashboard.data.weather.OpenMeteoService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -85,6 +86,16 @@ object NetworkModule {
         val api = if (config.isConfigured) NewsDataProvider(service, config, json) else null
         return NewsProviderChain(listOfNotNull(api, rss))
     }
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoService(client: OkHttpClient, json: Json): OpenMeteoService =
+        Retrofit.Builder()
+            .baseUrl(OpenMeteoService.BASE_URL)
+            .client(client)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+            .create(OpenMeteoService::class.java)
 
     private val USER_AGENT = "Mozilla/5.0 (Linux; Android) Aura/${BuildConfig.VERSION_NAME}"
 }

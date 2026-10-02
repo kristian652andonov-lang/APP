@@ -9,6 +9,12 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.aura.dashboard.domain.model.AccentColor
+import com.aura.dashboard.domain.model.AppStyle
+import com.aura.dashboard.domain.model.BackgroundEffect
+import com.aura.dashboard.domain.model.ClockStyle
+import com.aura.dashboard.domain.model.IconStyle
+import com.aura.dashboard.domain.model.TemperatureUnit
+import com.aura.dashboard.domain.model.WeatherLocation
 import com.aura.dashboard.domain.model.NewsCategory
 import com.aura.dashboard.domain.model.NewsRefreshInterval
 import com.aura.dashboard.domain.model.Priority
@@ -20,6 +26,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,6 +51,13 @@ interface UserPreferencesRepository {
     suspend fun setDefaultPriority(priority: Priority)
     suspend fun setTaskSort(sort: TaskSort)
     suspend fun setQuickAppsSeeded()
+    suspend fun setQuickAppsSeedVersion(version: Int)
+    suspend fun setAppStyle(style: AppStyle)
+    suspend fun setBackgroundEffect(effect: BackgroundEffect)
+    suspend fun setClockStyle(style: ClockStyle)
+    suspend fun setIconStyle(style: IconStyle)
+    suspend fun setTemperatureUnit(unit: TemperatureUnit)
+    suspend fun setWeatherLocation(location: WeatherLocation?)
 }
 
 @Singleton
@@ -68,6 +82,13 @@ class DataStoreUserPreferencesRepository @Inject constructor(
         val defaultPriority = stringPreferencesKey("default_priority")
         val taskSort = stringPreferencesKey("task_sort")
         val quickAppsSeeded = booleanPreferencesKey("quick_apps_seeded")
+        val quickAppsSeedVersion = intPreferencesKey("quick_apps_seed_version")
+        val appStyle = stringPreferencesKey("app_style")
+        val backgroundEffect = stringPreferencesKey("background_effect")
+        val clockStyle = stringPreferencesKey("clock_style")
+        val iconStyle = stringPreferencesKey("icon_style")
+        val temperatureUnit = stringPreferencesKey("temperature_unit")
+        val weatherLocation = stringPreferencesKey("weather_location")
     }
 
     override val preferences: Flow<UserPreferences> = dataStore.data
@@ -101,6 +122,15 @@ class DataStoreUserPreferencesRepository @Inject constructor(
             defaultPriority = p[Keys.defaultPriority].toEnum(defaults.defaultPriority),
             taskSort = p[Keys.taskSort].toEnum(defaults.taskSort),
             quickAppsSeeded = p[Keys.quickAppsSeeded] ?: defaults.quickAppsSeeded,
+            quickAppsSeedVersion = p[Keys.quickAppsSeedVersion] ?: defaults.quickAppsSeedVersion,
+            appStyle = p[Keys.appStyle].toEnum(defaults.appStyle),
+            backgroundEffect = p[Keys.backgroundEffect].toEnum(defaults.backgroundEffect),
+            clockStyle = p[Keys.clockStyle].toEnum(defaults.clockStyle),
+            iconStyle = p[Keys.iconStyle].toEnum(defaults.iconStyle),
+            temperatureUnit = p[Keys.temperatureUnit].toEnum(defaults.temperatureUnit),
+            weatherLocation = p[Keys.weatherLocation]?.let { raw ->
+                runCatching { json.decodeFromString(WeatherLocation.serializer(), raw) }.getOrNull()
+            },
         )
     }
 
@@ -136,6 +166,24 @@ class DataStoreUserPreferencesRepository @Inject constructor(
     override suspend fun setDefaultPriority(priority: Priority) = set(Keys.defaultPriority, priority.name)
     override suspend fun setTaskSort(sort: TaskSort) = set(Keys.taskSort, sort.name)
     override suspend fun setQuickAppsSeeded() = set(Keys.quickAppsSeeded, true)
+    override suspend fun setQuickAppsSeedVersion(version: Int) = set(Keys.quickAppsSeedVersion, version)
+    override suspend fun setAppStyle(style: AppStyle) = set(Keys.appStyle, style.name)
+    override suspend fun setBackgroundEffect(effect: BackgroundEffect) = set(Keys.backgroundEffect, effect.name)
+    override suspend fun setClockStyle(style: ClockStyle) = set(Keys.clockStyle, style.name)
+    override suspend fun setIconStyle(style: IconStyle) = set(Keys.iconStyle, style.name)
+    override suspend fun setTemperatureUnit(unit: TemperatureUnit) = set(Keys.temperatureUnit, unit.name)
+
+    override suspend fun setWeatherLocation(location: WeatherLocation?) {
+        dataStore.edit {
+            if (location == null) {
+                it.remove(Keys.weatherLocation)
+            } else {
+                it[Keys.weatherLocation] = json.encodeToString(WeatherLocation.serializer(), location)
+            }
+        }
+    }
+
+    private val json = Json { ignoreUnknownKeys = true }
 
     private suspend fun <T> set(key: Preferences.Key<T>, value: T) {
         dataStore.edit { it[key] = value }
